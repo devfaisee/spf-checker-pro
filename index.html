@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Optimization -->
+  <title>Verynt Pro - SPF Record Checker & Email Diagnostics Tool</title>
+  <meta name="description" content="Check, test, and analyze your domain's SPF (Sender Policy Framework) email authentication record instantly. Validate DNS lookup limits, qualifiers, syntax, and authorization rules.">
+  <meta name="keywords" content="spf checker, spf record check, spf tool, test spf records online, email security check, verify spf record, spf validator">
+  
+  <!-- FontAwesome & Custom CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="./style.css">
+  
+  <!-- Google AdSense Test Script (ca-pub-3940256099942544) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
+  <script src="./rewarded-ads.js"></script>
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <div class="brand" style="display: flex; align-items: center; gap: 0.75rem;">
+        <svg class="brand-logo-svg" width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.55)); transition: transform 0.3s ease;">
+          <defs>
+            <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#8B5CF6" />
+              <stop offset="100%" stop-color="#06B6D4" />
+            </linearGradient>
+          </defs>
+          <polygon points="50,5 90,27 90,73 50,95 10,73 10,27" stroke="url(#logo-grad)" stroke-width="8" fill="rgba(124, 92, 246, 0.05)" />
+          <path d="M50,22 L75,37 L75,63 L50,78 L25,63 L25,37 Z" fill="url(#logo-grad)" opacity="0.85" />
+          <polygon points="50,38 58,45 58,55 50,62 42,55 42,45" fill="#ffffff" />
+        </svg>
+        <span style="font-weight: 750; font-size: 1.5rem; letter-spacing: -0.75px; background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Verynt Pro</span>
+        <span class="brand-badge">Utility Sandbox</span>
+      </div>
+      <div class="header-nav" style="display: flex; align-items: center; gap: 1.5rem;">
+        <a href="https://verynt.com" class="back-link" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: color 0.2s;" onmouseover="this.style.color='#8B5CF6'" onmouseout="this.style.color='var(--text-muted)'">← Portal Hub</a>
+        <div class="privacy-indicator" title="Your DNS queries go straight to public DNS servers. We do not store or track any queries or domains.">
+          <i class="fa-solid fa-shield-halved text-cyan"></i>
+          <span>Zero Server Storage</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <h1>Domain SPF Record Checker & Diagnostics</h1>
+    <p>Verify that your Sender Policy Framework records are valid, compile IP authorization lists, and check for the critical 10-DNS-lookup limit.</p>
+  </section>
+
+  <!-- Main Workspace -->
+  <main class="tool-container">
+    <div class="tool-grid">
+      
+      <!-- Input Panel -->
+      <section class="panel-card dropzone-card">
+        <div class="card-header">
+          <h2 class="panel-title"><i class="fa-solid fa-search text-cyan"></i> Check SPF Configuration</h2>
+          <p class="panel-subtitle">Enter any domain to retrieve and diagnose its SPF DNS record instantly.</p>
+        </div>
+        
+        <form id="spf-form" class="spf-input-form" onsubmit="event.preventDefault();">
+          <div class="input-wrapper">
+            <input type="text" id="domain-input" placeholder="e.g. google.com" required autocomplete="off" spellcheck="false" />
+            <button type="submit" id="submit-btn" class="action-btn">
+              <span>Inspect DNS</span>
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </form>
+
+        <div class="quick-links">
+          <span class="quick-title">Quick Test:</span>
+          <button class="quick-btn" onclick="document.getElementById('domain-input').value='google.com'; document.getElementById('spf-form').dispatchEvent(new Event('submit'));">google.com</button>
+          <button class="quick-btn" onclick="document.getElementById('domain-input').value='microsoft.com'; document.getElementById('spf-form').dispatchEvent(new Event('submit'));">microsoft.com</button>
+          <button class="quick-btn" onclick="document.getElementById('domain-input').value='github.com'; document.getElementById('spf-form').dispatchEvent(new Event('submit'));">github.com</button>
+          <button class="quick-btn" onclick="document.getElementById('domain-input').value='netflix.com'; document.getElementById('spf-form').dispatchEvent(new Event('submit'));">netflix.com</button>
+        </div>
+
+        <div id="raw-record-card" class="raw-record-box" style="display: none;">
+          <h3 class="box-title">Raw TXT SPF Record</h3>
+          <div id="raw-spf-text" class="console-text"></div>
+        </div>
+      </section>
+
+      <!-- Results Diagnostics Panel -->
+      <section class="panel-card results-card">
+        <div class="card-header">
+          <h2 class="panel-title"><i class="fa-solid fa-circle-nodes text-purple"></i> Diagnostic Report</h2>
+          <p class="panel-subtitle">Real-time compilation checks against RFC 7208 standards.</p>
+        </div>
+
+        <!-- Initial Placeholder State -->
+        <div id="empty-state" class="empty-profile">
+          <div class="pulse-icon"><i class="fa-solid fa-server"></i></div>
+          <p>Provide a domain name above to initiate the client-side DNS scan.</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-state" class="loading-spinner" style="display: none;">
+          <div class="spinner"></div>
+          <span>Querying Google DNS resolvers...</span>
+        </div>
+
+        <!-- Main Diagnostics Content -->
+        <div id="report-content" class="ats-report" style="display: none;">
+          
+          <!-- Score Dashboard -->
+          <div class="ats-score-row">
+            <div id="score-circle" class="ats-score-circle">
+              <span id="score-num" class="ats-score-num">0%</span>
+              <span class="ats-score-lbl">Health Score</span>
+            </div>
+
+            <div class="ats-quick-stats">
+              <div class="stat-pill" title="SPF records must have 10 or fewer nested DNS lookups, or receiving mail servers will reject the record.">
+                <span class="stat-label">DNS Lookups:</span>
+                <span id="lookup-count" class="stat-val">0 / 10</span>
+              </div>
+              <div class="stat-pill" title="Total tokens, rules, or mechanisms defined in this record.">
+                <span class="stat-label">Total Elements:</span>
+                <span id="elements-count" class="stat-val">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lookup Limit Gauge -->
+          <div class="lookup-gauge-wrapper">
+            <div class="gauge-header">
+              <span>DNS Lookup Limit Utilisation</span>
+              <span id="gauge-percent">0%</span>
+            </div>
+            <div class="gauge-track">
+              <div id="gauge-fill" class="gauge-fill"></div>
+            </div>
+          </div>
+
+          <!-- Diagnostic Log Messages -->
+          <div class="diagnostics-log">
+            <h4 class="log-title">Diagnostics Log</h4>
+            <div id="log-entries-list"></div>
+          </div>
+
+          <!-- Parsed Parameters Table -->
+          <div class="text-preview-box">
+            <h4 class="preview-title">Record Compilation & Mechanisms</h4>
+            <div class="table-container">
+              <table class="params-table">
+                <thead>
+                  <tr>
+                    <th>Mechanism</th>
+                    <th>Value</th>
+                    <th>Qualifier</th>
+                    <th>Action/Description</th>
+                  </tr>
+                </thead>
+                <tbody id="params-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Sponsor Ad Space -->
+    <div class="portal-ad-banner">
+      <div class="ad-banner-badge">SPONSORED (TEST AD)</div>
+      <ins class="adsbygoogle"
+           style="display:block; width:100%; min-height:90px;"
+           data-ad-client="ca-pub-3940256099942544"
+           data-ad-slot="9876543210"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <span class="footer-text">&copy; 2026 Verynt Pro. 100% Client-Side DNS Diagnostics Sandbox.</span>
+      <div class="footer-links">
+        <a href="#" onclick="event.preventDefault(); alert('Zero Log Guarantee: This SPF checker queries DNS-over-HTTPS JSON resolvers directly from your browser interface. No domains, IP queries, or DNS values are ever logged, sent, or kept.');">Privacy Guarantee</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
